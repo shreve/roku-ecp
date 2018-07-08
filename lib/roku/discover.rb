@@ -20,13 +20,13 @@ module Roku
         begin
           parse_address(await_response)
         rescue Timeout::Error
-          raise DeviceNotFound, "Roku's automatic device discovery failed. " \
-                                "If you continue to receive this message, " \
-                                "you may want to manually configure this. " \
-                                "You can do this by finding the device's IP " \
-                                "via your router and setting the ROKU_HOST " \
-                                "environment variable to " \
-                                "\"http://{{device-ip}}:8060\"."
+          raise DeviceNotFound,
+                "Roku's automatic device discovery failed. If you continue " \
+                "to receive this message, you should try restarting your " \
+                "router, and you may want to manually configure this. You " \
+                "can do this by finding the device's IP via your router " \
+                "and setting the ROKU_HOST environment variable to " \
+                "\"http://{{device-ip}}:8060\"."
         end
       end
 
