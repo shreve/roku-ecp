@@ -14,6 +14,19 @@ for interacting.
 
 ## Usage
 
+Use the included bin script to get started.
+
+```bash
+$ roku
+```
+
+It will find your device and tell you when you're ready to interact.
+
+### Programatic Usage
+
+If you don't want to use the included remote program, you can use the source
+library instead.
+
 Find your Roku device and automatically configure the client to use it.
 
 ```ruby
