@@ -10,15 +10,28 @@ module Roku
               "Man: \"ssdp:discover\"\n" \
               "ST: roku:ecp\n\n".freeze
 
+    class DeviceNotFound < StandardError
+    end
+
     class << self
       def search
         bind
         socket.send(REQUEST, 0, MULTICAST_ADDR, PORT)
-        parse_address(await_response)
+        begin
+          parse_address(await_response)
+        rescue Timeout::Error
+          raise DeviceNotFound, "Roku's automatic device discovery failed. " \
+                                "If you continue to receive this message, " \
+                                "you may want to manually configure this. " \
+                                "You can do this by finding the device's IP " \
+                                "via your router and setting the ROKU_HOST " \
+                                "environment variable to " \
+                                "\"http://{{device-ip}}:8060\"."
+        end
       end
 
       def await_response
-        Timeout.timeout(5) do
+        Timeout.timeout(10) do
           loop do
             response, = socket.recvfrom(1024)
             if response.include?('LOCATION') && response.include?('200 OK')

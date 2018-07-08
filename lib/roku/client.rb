@@ -36,7 +36,7 @@ module Roku
 
     class << self
       def find_device!
-        address = Roku::Discover.search
+        address = ENV.fetch('ROKU_HOST') { Roku::Discover.search }
         base_uri(address)
       end
 

@@ -2,4 +2,8 @@
 
 require_relative '../lib/roku'
 
+puts "Finding device"
+Roku::Client.find_device!
+
+puts "Ready"
 Roku::Input.new.run
