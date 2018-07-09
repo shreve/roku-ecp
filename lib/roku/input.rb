@@ -2,38 +2,27 @@ require 'io/console'
 
 module Roku
   class Input
+    BINDINGS = {
+      ' ' => :Play,
+      "\r" => :Select,
+      "\e[A" => :Up,
+      "\e[B" => :Down,
+      "\e[C" => :Right,
+      "\e[D" => :Left,
+      "\e[1;5A" => :VolumeUp,
+      "\e[1;5B" => :VolumeDown,
+      "\u007F" => :Back
+    }.freeze
+
     def run
       while (input = read_char)
         case input
-        when ' '
-          Roku::Client.keypress(:Play)
-        when "\r"
-          Roku::Client.keypress(:Select)
-        when "\e[A"
-          Roku::Client.keypress(:Up)
-        when "\e[B"
-          Roku::Client.keypress(:Down)
-        when "\e[C"
-          Roku::Client.keypress(:Right)
-        when "\e[D"
-          Roku::Client.keypress(:Left)
-        when "\u007F"
-          Roku::Client.keypress(:Back)
-        when "\e[1;5A"
-          Roku::Client.keypress(:VolumeUp)
-        when "\e[1;5B"
-          Roku::Client.keypress(:VolumeDown)
         when 'a'
-          query = prompt('Launch: ')
-          app = Roku::Client.apps.find { |a| a.name.casecmp(query).zero? }
-          if app.nil?
-            print "\rNo app found."
-          else
-            print "\rLaunching #{app.name}."
-            app.launch!
-          end
-        when 'q', "\u0003"
+          launch_app(prompt('Launch: '))
+        when 'q', "\u0003", "\e"
           break
+        when *BINDINGS.keys
+          Roku::Client.keypress(BINDINGS[input])
         else
           puts input.inspect
         end
@@ -56,6 +45,16 @@ module Roku
     def prompt(label)
       print label
       $stdin.gets.chomp
+    end
+
+    def launch_app(query)
+      app = Roku::Client.apps.find { |a| a.name.casecmp(query).zero? }
+      if app.nil?
+        print "\rNo app found."
+      else
+        print "\rLaunching #{app.name}."
+        app.launch!
+      end
     end
   end
 end
