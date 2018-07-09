@@ -1,4 +1,5 @@
 require 'socket'
+require 'ipaddr'
 
 module Roku
   module Discover
