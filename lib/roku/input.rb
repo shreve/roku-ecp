@@ -25,7 +25,7 @@ module Roku
           Roku::Client.keypress(:VolumeDown)
         when 'a'
           query = prompt('Launch: ')
-          app = Roku::Client.apps.find { |a| a.name.casecmp(query) }
+          app = Roku::Client.apps.find { |a| a.name.casecmp(query).zero? }
           if app.nil?
             print "\rNo app found."
           else
