@@ -73,8 +73,8 @@ module Roku
 
       def send_text(string)
         string.split('').map do |c|
-          next if c == ' '
-          post("/keypress/#{c}").success?
+          c = CGI.escape(c)
+          post("/keypress/Lit_#{c}").success?
         end.all?
       end
 

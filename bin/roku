@@ -2,6 +2,8 @@
 
 require_relative '../lib/roku'
 
+Signal.trap('TERM') {}
+
 puts 'Finding device'
 Roku::Client.find_device!
 

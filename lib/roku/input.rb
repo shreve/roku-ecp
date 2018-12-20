@@ -4,14 +4,28 @@ module Roku
   class Input
     BINDINGS = {
       ' ' => :Play,
-      "\r" => :Select,
+      '*' => :Info,
+      "\r" => :Select, # Return / enter  key
+
+      # Vim keys and arrow keys
+      'h' => :Left,
+      'j' => :Up,
+      'k' => :Down,
+      'l' => :Right,
       "\e[A" => :Up,
       "\e[B" => :Down,
       "\e[C" => :Right,
       "\e[D" => :Left,
+
+      # Control + arrow keys
       "\e[1;5A" => :VolumeUp,
       "\e[1;5B" => :VolumeDown,
-      "\u007F" => :Back
+
+      "\u0011" => :PowerOff, # Control + q
+
+      "\e" => :Back, # Escape
+      "\u007F" => :Backspace, # Backspace
+      "\b" => :InstantReplay # Control + backspace
     }.freeze
 
     def run
@@ -19,7 +33,9 @@ module Roku
         case input
         when 'a'
           launch_app(prompt('Launch: '))
-        when 'q', "\u0003", "\e"
+        when 's'
+          Roku::Client.send_text(prompt('Send Text: '))
+        when 'q', "\u0003"
           break
         when *BINDINGS.keys
           Roku::Client.keypress(BINDINGS[input])
